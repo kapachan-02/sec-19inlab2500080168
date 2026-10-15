@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .box {
+            width: 350px;
+            max-width: 90%;
+            padding: 30px;
+            background: white;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 20px #33333340;
+        }
+
+        h2 {
+            color: #5746c7;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            background: #5b4bdb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #4032a5;
+        }
+
+        .logout {
+            background: #e74c3c;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #message {
+            margin-top: 12px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="box" id="loginPage">
+        <h2>Login</h2>
+        <p>Please enter your details</p>
+
+        <form id="loginForm">
+            <input type="text" id="username"
+                   placeholder="Username" required>
+
+            <input type="password" id="password"
+                   placeholder="Password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <div id="message"></div>
+    </div>
+
+    <div class="box hidden" id="dashboard">
+        <h2>Dashboard</h2>
+        <p>Login Successful!</p>
+
+        <h3>Welcome, <span id="displayName"></span></h3>
+
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        function checkSession() {
+            let user = sessionStorage.getItem("loggedInUser");
+
+            if (user) {
+                showDashboard(user);
+            } else {
+                document.getElementById("loginPage").classList.remove("hidden");
+                document.getElementById("dashboard").classList.add("hidden");
+            }
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            let username = document.getElementById("username").value.trim();
+
+            // Accept any username and password
+            sessionStorage.setItem("loggedInUser", username);
+            localStorage.setItem("username", username);
+
+            document.getElementById("message").textContent = "";
+            showDashboard(username);
+        });
+
+        function showDashboard(username) {
+            document.getElementById("loginPage").classList.add("hidden");
+            document.getElementById("dashboard").classList.remove("hidden");
+            document.getElementById("displayName").textContent = username;
+        }
+
+        function logout() {
+            sessionStorage.removeItem("loggedInUser");
+            document.getElementById("loginForm").reset();
+            checkSession();
+        }
+
+        checkSession();
+    </script>
+
+</body>
+</html>
